@@ -4,24 +4,23 @@ const { Tag, Product, ProductTag } = require('../../models');
 
 // The `/api/tags` endpoint
 
-router.get('/', async (req, res) => {
-  try {
-    const tags = await Tag.findAll({
-      include: [
-        {
-          model: Product,
-          attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
-        },
-      ],
-});
-res.json(tags);
-  } catch (err) {
+router.get("/", (req, res) => {
+  Tag.findAll({
+    include: [
+      {
+        model: Product,
+        attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
+      }
+    ]
+  })
+  .then(tagInfo => res.json(tagInfo))
+  .catch(err => {
     console.log(err);
     res.status(500).json(err);
-  }
+  })
 });
 
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
 try{
   const tags = await Tag.findOne({
     where: {
@@ -75,7 +74,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
     try {
       const tags = await Tag.destroy({
         where: {
